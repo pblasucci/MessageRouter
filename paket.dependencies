@@ -1,10 +1,14 @@
 source https://nuget.org/api/v2
 
 nuget FSharp.Formatting
+nuget FSharp.Collections.ParallelSeq
+nuget FSharp.Core.3
+nuget FsUnit
 nuget NUnit 
 nuget NUnit.Runners
 nuget Nuget.CommandLine
 nuget FAKE
 nuget SourceLink.Fake
+nuget XSerializer
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
