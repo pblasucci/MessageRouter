@@ -16,7 +16,7 @@
     <tags>@tags@</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="FSharp.Core.Microsoft.Signed.3.1.1.1" version="3.1.1" />
+        <dependency id="FSharp.Core.Microsoft.Signed" version="3.1.1" />
         <dependency id="MessageRouter.Interfaces" version="1.4.0" />
       </group>
     </dependencies>
