@@ -17,14 +17,12 @@
     <dependencies>
       <group targetFramework=".NETFramework4.5">
         <dependency id="FSharp.Core.Microsoft.Signed.3.1.1.1" version="3.1.1" />
-        <dependency id="XSerializer" version="0.1.23" />
         <dependency id="MessageRouter.Interfaces" version="1.4.0" />
-        <dependency id="MessageRouter.Reflection" version="1.4.0" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\MessageRouter.dll" target="lib/net40" />
-    <file src="..\bin\MessageRouter.pdb" target="lib/net40" />
+    <file src="..\bin\MessageRouter.Reflection.dll" target="lib/net45" />
+    <file src="..\bin\MessageRouter.Reflection.pdb" target="lib/net45" />
   </files>
 </package>

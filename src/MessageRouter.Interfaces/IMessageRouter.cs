@@ -3,7 +3,7 @@
 namespace MessageRouter.Interfaces
 {
     /// <summary>
-    /// Routes messages (i.e. ICommand or IEvent instances) to the appropriate handler (i.e. an IHandleCommand<> or IHandleEvent<> instance)
+    /// Routes messages (i.e. ICommand or IEvent instances) to the appropriate handler (i.e. an IHandleCommand or IHandleEvent instance)
     /// </summary>
     public interface IMessageRouter
     {

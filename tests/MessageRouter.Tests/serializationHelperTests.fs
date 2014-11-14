@@ -36,7 +36,7 @@ type ``Given a deserializer`` () =
 [<TestFixture>]
 [<CategoryAttribute("SerializationHelper")>]
 type ``Given a serializer`` () =
-    let bar_Command1 = """<?xml version="1.0" encoding="utf-8"?><SampleTypes.CSharp.Commands.Bar.Command1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><MyInt>10</MyInt></SampleTypes.CSharp.Commands.Bar.Command1>"""
+    let bar_Command1 = """<?xml version="1.0" encoding="utf-8"?><SampleTypes.CSharp.Commands.Bar.Command1 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><MyInt>10</MyInt></SampleTypes.CSharp.Commands.Bar.Command1>"""
 
     [<Test>] 
     member x.``when given an object I should get back a string that represents that object`` () =

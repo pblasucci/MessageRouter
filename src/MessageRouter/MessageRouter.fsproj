@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\..\bin\MessageRouter.xml</DocumentationFile>
@@ -64,6 +64,14 @@
     <Compile Include="serializationHelper.fs" />
     <None Include="packages.config" />
     <None Include="App.config" />
+    <None Include="..\..\packages\FSharp.Core.Microsoft.Signed.3.1.1.1\lib\net45\FSharp.Core.sigdata">
+      <Link>FSharp.Core.sigdata</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\packages\FSharp.Core.Microsoft.Signed.3.1.1.1\lib\net45\FSharp.Core.optdata">
+      <Link>FSharp.Core.optdata</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -73,7 +81,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="XSerializer">
-      <HintPath>..\packages\XSerializer.0.1.12\lib\net40\XSerializer.dll</HintPath>
+      <HintPath>..\..\packages\XSerializer.0.1.12\lib\net40\XSerializer.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
