@@ -16,6 +16,7 @@ open SampleTypes.CSharp.Commands.Bar
 open SampleTypes.CSharp.CommandHandlers
 open SampleTypes.CSharp.Events
 open SampleTypes.CSharp.EventHandlers
+open System.Threading.Tasks
 
 [<TestFixture>]
 [<CategoryAttribute("Router")>]
@@ -140,7 +141,6 @@ type ``Given a Router`` () =
             Thread.Sleep 100
         } |> Async.RunSynchronously
 
-
     (***********************
         ================
         LIST TESTS BELOW
@@ -196,3 +196,70 @@ type ``Given a Router`` () =
                             | _ -> r.Route(Command6(), complete, fail))
             Thread.Sleep 1000
         } |> Async.RunSynchronously
+
+(***********************
+    =================
+    UNION TESTS BELOW
+    =================
+  ***********************)
+
+type Commands =
+  | Command1 of string
+  | Command2 of int
+  interface ICommand
+
+type Events =
+  | Event1 of string
+  | Event2 of int
+  interface IEvent
+
+type UnionCommandsHandler () =
+  interface IHandleCommand<Commands> with
+    member __.Handle (message,completion) = 
+      match message with
+      | Command1 value -> printfn "%s" value
+      | Command2 value -> printfn "%i" value
+      completion.Invoke ()
+      Task.Delay(0)
+
+type UnionEventsHandler () =
+  interface IHandleEvent<Events> with
+    member __.Handle (message,completion) = 
+      match message with
+      | Event1 value -> printfn "%s" value
+      | Event2 value -> printfn "%i" value
+      completion.Invoke ()
+      Task.Delay(0)
+
+[<TestFixture>]
+[<CategoryAttribute("Router")>]
+type ``Given I want to route unions`` () =
+    let fail = 
+        Action<obj,exn>(fun obj exn ->
+            match exn with
+            | :? SuccessException -> printfn "SuccessException"; Assert.Pass() |> should throw typeof<SuccessException>
+            | _ -> printfn "%s" exn.Message; Assert.Fail() |> should throw typeof<AssertionException>)
+
+    let complete = Action(fun() -> printfn "Success"; Assert.Pass())
+
+    let types = [ typeof<UnionCommandsHandler>; typeof<UnionEventsHandler> ]
+
+    let resolver = 
+      let r = new SampleResolver();
+      r.AddType(typeof<UnionCommandsHandler>, new UnionCommandsHandler())
+      r.AddType(typeof<UnionEventsHandler>  , new UnionEventsHandler  ())
+      r
+
+    [<Test>]
+    member x.``when I pass an instance of a Union tagged with ICommand I expect it to be treated like any other ICommand instance`` () =
+      let r = Router (resolver,types) :> IMessageRouter
+      let c = Command2 54
+      Async.RunSynchronously (async { r.Route(c, complete, fail); Thread.Sleep 300 }) 
+
+    [<Test>]
+    member x.``when I pass an instance of a Union tagged with IEvent I expect it to be treated like any other IEvent instance`` () =
+      let r = Router (resolver,types) :> IMessageRouter
+      let e = Event2 42
+      Async.RunSynchronously (async { r.Route(e, complete, fail); Thread.Sleep 300 }) 
+
+  

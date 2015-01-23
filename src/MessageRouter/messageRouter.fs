@@ -3,6 +3,8 @@
 open System
 open System.Collections.Concurrent
 
+open Microsoft.FSharp.Reflection
+
 open MessageRouter.Interfaces
 open MessageRouter.Types
 open MessageRouter.Reflection.ReflectionHelper
@@ -11,7 +13,14 @@ open MessageRouter.Reflection.ReflectionHelper
 type Router(resolver: IResolver, handlers: Type seq) =
     let typeMap = ConcurrentDictionary<Type, Action<obj, Action>[]>()
     let actions = HandlerExtractor.getHandleActions resolver (handlers |> Seq.toArray)
-    let getHandler (t:Type) = typeMap.GetOrAdd(t, t |> actions)
+    let getHandler (t:Type) =
+      (*  !!! HACK !!!
+          At run-time Union cases have a type (a sub-type of the compile-time Union type).
+          However, since they don't have a type at compile-time, individual case can't be labeled as messages 
+          (i.e. ICommand, IEvent can only be applied to the overall Union type). This cause run-time matching to fail. 
+          So, as a work-around, when dealing with Union cases, we always treat them as the base (compile-time) type. *)
+      let t' = if FSharpType.IsUnion t then t.BaseType else t
+      typeMap.GetOrAdd(t', t' |> actions)
     let errors (failure:Action<obj,exn>) = 
         new Agent<exn>(fun inbox ->
                 async {
