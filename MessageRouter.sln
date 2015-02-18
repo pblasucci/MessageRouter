@@ -39,9 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F1C550
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.API", "MessageRouter.API\MessageRouter.API.fsproj", "{0F2AA684-7641-48EC-97A3-97584B20E343}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter", "src\MessageRouter\MessageRouter.fsproj", "{EA7AE41E-F81A-442F-9803-22E02C74EC9F}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter", "MessageRouter\MessageRouter.fsproj", "{EA7AE41E-F81A-442F-9803-22E02C74EC9F}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.SDK", "src\MessageRouter.SDK\MessageRouter.SDK.fsproj", "{0F2AA684-7641-48EC-97A3-97584B20E343}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +49,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F2AA684-7641-48EC-97A3-97584B20E343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F2AA684-7641-48EC-97A3-97584B20E343}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F2AA684-7641-48EC-97A3-97584B20E343}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F2AA684-7641-48EC-97A3-97584B20E343}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EA7AE41E-F81A-442F-9803-22E02C74EC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EA7AE41E-F81A-442F-9803-22E02C74EC9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA7AE41E-F81A-442F-9803-22E02C74EC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA7AE41E-F81A-442F-9803-22E02C74EC9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2AA684-7641-48EC-97A3-97584B20E343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2AA684-7641-48EC-97A3-97584B20E343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2AA684-7641-48EC-97A3-97584B20E343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2AA684-7641-48EC-97A3-97584B20E343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

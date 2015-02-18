@@ -1,12 +1,13 @@
-﻿#load "../MessageRouter.API/Library.fs"
-open MessageRouter.API
+﻿#load "../MessageRouter.SDK/API.fs"
+open MessageRouter.SDK
 open Microsoft.FSharp.Quotations
 open Microsoft.FSharp.Quotations.ExprShape
 open Microsoft.FSharp.Quotations.Patterns
 open Microsoft.FSharp.Linq.RuntimeHelpers
 open System
 open System.Reflection
-  
+open System.Threading.Tasks
+
 type 'msg action = ('msg -> (unit -> unit) -> unit)
 
 //ASK_JOHN: can a message be both ICommand and IEvent?
@@ -19,10 +20,10 @@ type Extraction<'cmsg,'emsg when 'cmsg :> ICommand
   | EventHandlers   of ('emsg action) seq
   | Error           of ExtractionError
 and ExtractionError =
-  //TODO: imporve these errors
+  //TODO: improve these errors
   | InvalidMessageType
   | MultipleCommandHandlers
-    
+
 let (|Method|_|) (expr:Expr<'e>) =
   let rec walk = function
   | Call              (_,meth,_)  ->  Some meth
@@ -41,34 +42,39 @@ let (|Interface|_|) (target:Type) (suspect:Type) =
 let (|Command|_|) suspect = (|Interface|_|) (typeof<ICommand>)  suspect
 let (|Event|_|)   suspect = (|Interface|_|) (typeof<IEvent>)    suspect
 
-let fillOpenGeneric<'t> filling =
-  //TODO: rework this method... it's sloppy! 
-  if typeof<'t>.GenericTypeArguments.Length > 0
-    then typedefof<'t>.MakeGenericType [| filling |]
-    else failwith "Only open generics may be filled!"
+let fillGeneric (openType :Type) args = 
+  //TODO: this needs much better error handling!
+  if openType.IsGenericTypeDefinition 
+  && openType.ContainsGenericParameters
+    then  let defn = openType.GetGenericArguments()
+          if Array.length defn = Array.length args
+            then  //TODO: consider more exhaustive type checking
+                  openType.MakeGenericType args
+            else  failwith "Wrong number of generic arguments!"
+    else  failwith "Can only fill an open generic!"
 
 let adaptCommand messageType =
-  let target = fillOpenGeneric<IHandleCommand<_>> messageType
+  let target = fillGeneric (typedefof<IHandleCommand<_>>) [| messageType |]
   match <@ fun (t:IHandleCommand<_>) args -> t.Handle args @> with
   | Method m  -> (target,target.GetMethod m.Name)
-  | _         -> failwith "This should never happen!" //TODO: handle this better!
+  | _         -> failwith "This should never happen!"
   
 let adaptEvent messageType =  
-  let target = fillOpenGeneric<IHandleEvent<_>> messageType
+  let target = fillGeneric (typedefof<IHandleEvent<_>>) [| messageType |]
   match <@ fun (t:IHandleEvent<_>) args -> t.Handle args @> with
   | Method m  -> (target,target.GetMethod m.Name)
-  | _         -> failwith "This should never happen!" //TODO: handle this better!
+  | _         -> failwith "This should never happen!"
 
 let buildAction (resolver:IResolver) (handle:MethodInfo) handlerType  =
 //ASK_JOHN: should we validate that resolver calls won't fail at runtime?
   let handler = <@ resolver.Resolve handlerType @>
   let action :Expr<'msg action> = 
 //ASK_JOHN: why do handlers return a Task?
-    <@ fun message onfinal -> handle.Invoke (%handler,[| message; Action onfinal |]) |> ignore @>
-    //TODO: can `Action` be removed from previous quotation?
+    <@ fun message onSuccess -> handle.Invoke (%handler,[| message; onSuccess |]) |> ignore @>
   unbox<'msg action> (LeafExpressionConverter.EvaluateQuotation action)
 
 let buildCommandHandler resolver handlerTypes messageType =
+  //TODO: this needs much better error handling!
   let iface,handle  = adaptCommand messageType
   let buildAction   = buildAction resolver handle
   let handlerTypes  = handlerTypes |> Seq.choose ((|Interface|_|) iface)
@@ -91,6 +97,5 @@ let buildEventHandlers resolver handlerTypes messageType =
 let extract resolver handlerTypes messageType =
   match messageType with
   | Command _ -> buildCommandHandler resolver handlerTypes messageType
-  | Event   _ -> buildEventHandlers resolver handlerTypes messageType
+  | Event   _ -> buildEventHandlers  resolver handlerTypes messageType
   | _         -> Error InvalidMessageType
-

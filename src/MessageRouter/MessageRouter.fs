@@ -1,10 +1,11 @@
 ﻿namespace MessageRouter
 
+open MessageRouter.SDK
 open Microsoft.FSharp.Reflection
 open System
 open System.Collections.Concurrent
 
-type Router<'msg> (resolver,handlerTypes,?log) =
+type Router (resolver,handlerTypes,?log) =
   let mutable disposed = false
 
   //TODO: consider not exposing log function as such
@@ -54,8 +55,8 @@ type Router<'msg> (resolver,handlerTypes,?log) =
       disposed <- true
       foreman <-- None
 
-  interface API.IMessageRouter<'msg> with
-    member R.Route message onComplete onFailed = R.Route message onComplete onFailed
+  interface IMessageRouter with
+    member R.Route message onSuccess onFailure = R.Route message onSuccess onFailure
       
   interface IDisposable with
     member R.Dispose () =
