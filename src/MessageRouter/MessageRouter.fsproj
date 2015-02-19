@@ -58,8 +58,9 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Compile Include="API.fs" />
     <Compile Include="Library.fs" />
-    <Compile Include="MessageRouter.fs" />
+    <Compile Include="Router.fs" />
     <None Include="Scratch.fsx" />
   </ItemGroup>
   <ItemGroup>
@@ -67,13 +68,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MessageRouter.SDK\MessageRouter.SDK.fsproj">
-      <Name>MessageRouter.SDK</Name>
-      <Project>{0f2aa684-7641-48ec-97a3-97584b20e343}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

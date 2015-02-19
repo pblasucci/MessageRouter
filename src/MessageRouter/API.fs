@@ -1,4 +1,4 @@
-﻿namespace MessageRouter.SDK
+﻿namespace MessageRouter
 
 open System
 open System.Threading.Tasks

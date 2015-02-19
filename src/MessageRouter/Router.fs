@@ -1,6 +1,5 @@
 ﻿namespace MessageRouter
 
-open MessageRouter.SDK
 open Microsoft.FSharp.Reflection
 open System
 open System.Collections.Concurrent
