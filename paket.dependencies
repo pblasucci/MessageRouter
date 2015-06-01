@@ -2,7 +2,7 @@ source https://nuget.org/api/v2
 
 nuget FSharp.Formatting
 nuget FSharp.Collections.ParallelSeq
-nuget FSharp.Core.3
+nuget FSharp.Core
 nuget FsUnit
 nuget NUnit 
 nuget NUnit.Runners

@@ -39,7 +39,7 @@ let authors = [ "John Fair and Paul Blasucci" ]
 // Tags for your project (for NuGet package)
 let tags = "cqrs event-sourcing fsharp f#"
 
-// File system information 
+// File system information
 let solutionFile  = "MessageRouter.sln"
 
 // Pattern specifying assemblies to be tested using NUnit
@@ -47,7 +47,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
-let gitOwner = "QuickenLoans" 
+let gitOwner = "QuickenLoans"
 let gitHome = "https://github.com/" + gitOwner
 
 // The name of the project on GitHub
@@ -164,9 +164,9 @@ let generateHelp fail =
             failwith "generating help documentation failed"
         else
             traceImportant "generating help documentation failed"
-    
+
 Target "GenerateHelp" (fun _ ->
-    DeleteFile "docs/content/release-notes.md"    
+    DeleteFile "docs/content/release-notes.md"
     CopyFile "docs/content/" "RELEASE_NOTES.md"
     Rename "docs/content/release-notes.md" "docs/content/RELEASE_NOTES.md"
 
@@ -177,7 +177,7 @@ Target "GenerateHelp" (fun _ ->
     generateHelp true
 )
 
-Target "KeepRunning" (fun _ ->    
+Target "KeepRunning" (fun _ ->
     use watcher = new FileSystemWatcher(DirectoryInfo("docs/content").FullName,"*.*")
     watcher.EnableRaisingEvents <- true
     watcher.Changed.Add(fun e -> generateHelp false)
@@ -220,11 +220,11 @@ Target "Release" (fun _ ->
 
     Branches.tag "" release.NugetVersion
     Branches.pushTag "" "origin" release.NugetVersion
-    
+
     // release on github
     createClient (getBuildParamOrDefault "github-user" "") (getBuildParamOrDefault "github-pw" "")
-    |> createDraft gitOwner gitName release.NugetVersion (release.SemVer.PreRelease <> None) release.Notes 
-    // TODO: |> uploadFile "PATH_TO_FILE"    
+    |> createDraft gitOwner gitName release.NugetVersion (release.SemVer.PreRelease <> None) release.Notes
+    // TODO: |> uploadFile "PATH_TO_FILE"
     |> releaseDraft
     |> Async.RunSynchronously
 )
@@ -240,12 +240,12 @@ Target "All" DoNothing
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "RunTests"
-  =?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
-  =?> ("GenerateDocs",isLocalBuild && not isMono)
+//  =?> ("GenerateReferenceDocs",isLocalBuild && not isMono
+//  =?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"
-  =?> ("ReleaseDocs",isLocalBuild && not isMono)
+//  =?> ("ReleaseDocs",isLocalBuild && not isMono)
 
-"All" 
+"All"
   ==> "NuGet"
   ==> "BuildPackage"
 
@@ -256,7 +256,7 @@ Target "All" DoNothing
 
 "GenerateHelp"
   ==> "KeepRunning"
-    
+
 "ReleaseDocs"
   ==> "Release"
 
