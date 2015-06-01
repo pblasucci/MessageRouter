@@ -28,7 +28,7 @@ type Extraction<'cmsg,'emsg when 'cmsg :> ICommand
   | Error           of ExtractionError
 and ExtractionError =
   //TODO: improve these errors
-  | InvalidMessageType of Type
+  | InvalidMessageType
   | MultipleCommandHandlers
 
 /// Extract MethodInfo from a (strongly-typed) quotation of method invocation
