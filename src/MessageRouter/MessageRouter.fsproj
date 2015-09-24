@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>MessageRouter</RootNamespace>
     <AssemblyName>MessageRouter</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
     <Name>MessageRouter</Name>
     <TargetFrameworkProfile />
@@ -44,6 +44,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Library.fs" />
     <Compile Include="Meta.fs" />
     <Compile Include="MessageRouter.fs" />

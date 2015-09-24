@@ -247,7 +247,7 @@ let createIndexFsx lang =
 #I "../../../bin"
 
 (**
-F# Project Scaffold ({0})
+MessageRouter ({0})
 =========================
 *)
 """

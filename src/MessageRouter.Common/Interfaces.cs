@@ -19,8 +19,8 @@ namespace MessageRouter.Common
   /// <summary>
   /// Processes a command received from IMessageRouter
   /// </summary>
-  /// <typeparam name="_command">the type of command to be preocessed</typeparam>
-  public interface IHandleCommand<_command> where _command : ICommand 
+  /// <typeparam name="TCommand">the type of command to be preocessed</typeparam>
+  public interface IHandleCommand<TCommand> where TCommand : ICommand 
   {
     /// <summary>
     /// Processes a command received from IMessageRouter
@@ -28,14 +28,14 @@ namespace MessageRouter.Common
     /// <param name="command">The command to be processed</param>
     /// <param name="shutdown">Enables participation in cooperative cancellation</param>
     /// <returns>Task indicating result (status)</returns>
-    Task Handle (_command commandData, CancellationToken shutdown);
+    Task Handle (TCommand command, CancellationToken shutdown);
   }
 
   /// <summary>
   /// Processes an event received from IMessageRouter
   /// </summary>
-  /// <typeparam name="_event">The type of the event to be processed</typeparam>
-  public interface IHandleEvent<_event> where _event : IEvent
+  /// <typeparam name="TEvent">The type of the event to be processed</typeparam>
+  public interface IHandleEvent<TEvent> where TEvent : IEvent
   {
     /// <summary>
     /// Processes an event received from IMessageRouter
@@ -43,7 +43,7 @@ namespace MessageRouter.Common
     /// <param name="event">The event to be processed</param>
     /// <param name="shutdown">Enables participation in cooperative cancellation</param>
     /// <returns>Task indicating result (status)</returns>
-    Task Handle (_event eventData, CancellationToken shutdown);
+    Task Handle (TEvent @event, CancellationToken shutdown);
   }
 
   /// <summary>
@@ -54,23 +54,23 @@ namespace MessageRouter.Common
     /// <summary>
     /// Determines if the resolver knows how to instantiate the given type
     /// </summary>
-    /// <param name="type">The type to be instantiated</param>
+    /// <param name="info">The type to be instantiated</param>
     /// <returns>True if the type may be instantiated, false otherwise</returns>
     Boolean CanResolve (Type info);
     
     /// <summary>
     /// Gets a type from the resolver, using run-time type information
     /// </summary>
-    /// <param name="type">The type to be retrieved</param>
+    /// <param name="info">The type to be retrieved</param>
     /// <returns>An instance of the desired type</returns>
     Object Get (Type info);
 
     /// <summary>
     /// Gets a type from the resolver, using compile-time type information
     /// </summary>
-    /// <typeparam name="_type">The type to be retrieved</typeparam>
+    /// <typeparam name="TType">The type to be retrieved</typeparam>
     /// <returns>An instance of the desired type</returns>
-    _type Get<_type> ();
+    TType Get<TType> ();
   }
 
   /// <summary>

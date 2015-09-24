@@ -6,12 +6,14 @@ open System.Collections
 open System.Collections.Concurrent
 open System.Threading
 
+/// Routes messages (i.e. ICommand or IEvent instances) to 
+/// the appropriate handler (i.e. an IHandleCommand or IHandleEvent instance)
 type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
   let mutable disposed = false
 
   let shutdown = new CancellationTokenSource ()
   
-  let foreman = trapError self onError
+  let supervisor = trapError self onError
                 |> Agent.cancelWith shutdown.Token
                 |> Agent.start
 
@@ -19,16 +21,19 @@ type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
     message
     |> batchActions onComplete onError
     |> Agent.cancelWith shutdown.Token
-    |> Agent.withMonitor foreman (routeEx message)
+    |> Agent.withMonitor supervisor (routeEx message)
     |> Agent.start
 
-  let extractor = Meta.extract resolver handlerTypes
+  let extractor = Meta.extractHandlers resolver handlerTypes
 
   let catalog = ConcurrentDictionary<_,_> ()
-      
+    
+  /// .ctor for languages lacking support for curried F# functions 
   new (resolver,handlerTypes,onError:Action<RoutingException>) = 
     new MessageRouter<_> (resolver,handlerTypes,(fun x -> onError.Invoke x))
 
+  /// Routes the given message to any available handlers
+  /// and executes the appropriate callback once all handlers are done
   member __.Route (message:'msg,onComplete,onError) =
     match typeof<'msg> |> Meta.findHandlers catalog extractor with
     | CommandHandler (Some item) -> // handle command 
@@ -40,12 +45,12 @@ type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
                                     worker <-- (items :> IEnumerable)
     // no handlers found
     | EventHandlers  _            
-    | CommandHandler _  ->  foreman <-- ( typeof<'msg> 
+    | CommandHandler _  ->  supervisor <-- ( typeof<'msg> 
                                           |> NoHandlersFound
                                           |> routeEx message )
                             onComplete ()
     // something went wrong
-    | Error error -> foreman <-- routeEx message error
+    | Error error -> supervisor <-- routeEx message error
 
   override __.Finalize () =
     if not disposed then
