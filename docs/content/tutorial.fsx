@@ -10,8 +10,8 @@ Introducing your project
 Say more
 
 *)
-#r "FSharp.ProjectTemplate.dll"
-open FSharp.ProjectTemplate
+#r "MessageRouter.dll"
+open MessageRouter
 
 Library.hello 0
 (**

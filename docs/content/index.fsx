@@ -4,8 +4,8 @@
 #I "../../bin"
 
 (**
-F# Project Scaffold
-===================
+MessageRouter
+======================
 
 Documentation
 
@@ -13,8 +13,8 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The F# ProjectTemplate library can be <a href="https://nuget.org/packages/FSharp.ProjectTemplate">installed from NuGet</a>:
-      <pre>PM> Install-Package FSharp.ProjectTemplate</pre>
+      The MessageRouter library can be <a href="https://nuget.org/packages/MessageRouter">installed from NuGet</a>:
+      <pre>PM> Install-Package MessageRouter</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -26,8 +26,8 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "FSharp.ProjectTemplate.dll"
-open FSharp.ProjectTemplate
+#r "MessageRouter.dll"
+open MessageRouter
 
 printfn "hello = %i" <| Library.hello 0
 
@@ -38,7 +38,7 @@ Samples & documentation
 -----------------------
 
 The library comes with comprehensible documentation. 
-It can include a tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
+It can include tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
 The API reference is automatically generated from Markdown comments in the library implementation.
 
  * [Tutorial](tutorial.html) contains a further explanation of this sample library.
@@ -59,9 +59,9 @@ The library is available under Public Domain license, which allows modification 
 redistribution for both commercial and non-commercial purposes. For more information see the 
 [License file][license] in the GitHub repository. 
 
-  [content]: https://github.com/fsprojects/FSharp.ProjectScaffold/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/FSharp.ProjectScaffold
-  [issues]: https://github.com/fsprojects/FSharp.ProjectScaffold/issues
-  [readme]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/README.md
-  [license]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/MessageRouter/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/MessageRouter
+  [issues]: https://github.com/fsprojects/MessageRouter/issues
+  [readme]: https://github.com/fsprojects/MessageRouter/blob/master/README.md
+  [license]: https://github.com/fsprojects/MessageRouter/blob/master/LICENSE.txt
 *)

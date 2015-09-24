@@ -1,57 +1,65 @@
 ﻿namespace MessageRouter
 
+open MessageRouter.Common
 open System
+open System.Collections
 open System.Collections.Concurrent
+open System.Threading
 
-open Microsoft.FSharp.Reflection
+type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
+  let mutable disposed = false
 
-open MessageRouter.Interfaces
-open MessageRouter.Types
-open MessageRouter.Reflection.ReflectionHelper
+  let shutdown = new CancellationTokenSource ()
+  
+  let foreman = trapError self onError
+                |> Agent.cancelWith shutdown.Token
+                |> Agent.start
 
-/// Passes commands and events to handlers (registered by type)
-type Router(resolver: IResolver, handlers: Type seq) =
-    let typeMap = ConcurrentDictionary<Type, Action<obj, Action>[]>()
-    let actions = HandlerExtractor.getHandleActions resolver (handlers |> Seq.toArray)
-    let getHandler (t:Type) =
-      (*  !!! HACK !!!
-          At run-time Union cases have a type (a sub-type of the compile-time Union type).
-          However, since they don't have a type at compile-time, individual case can't be labeled as messages 
-          (i.e. ICommand, IEvent can only be applied to the overall Union type). This cause run-time matching to fail. 
-          So, as a work-around, when dealing with Union cases, we always treat them as the base (compile-time) type. *)
-      let t' = if FSharpType.IsUnion t then t.BaseType else t
-      typeMap.GetOrAdd(t', t' |> actions)
-    let errors (failure:Action<obj,exn>) = 
-        new Agent<exn>(fun inbox ->
-                async {
-                    let! msg = inbox.Receive()
-                    raise msg
-                })
-            |> Agent.reportErrorsTo (failure.Invoke |> Agent.supervisor)
-            |> Agent.start
+  let worker message onComplete onError = 
+    message
+    |> batchActions onComplete onError
+    |> Agent.cancelWith shutdown.Token
+    |> Agent.withMonitor foreman (routeEx message)
+    |> Agent.start
 
-    interface IMessageRouter with
-        //NOTE: The failure function will be executed any time a handler throws an exception 
-        //      This can be used to Log, send to a fault queue, etc
-        member x.Route (message:'T, completion, failure) = 
-            let errors' = errors failure
-            (new Agent<Action<obj,Action>[]>(fun inbox ->
-                    async {
-                        let! msg = inbox.Receive()
-                        let exns = ResizeArray<exn>()
+  let extractor = Meta.extract resolver handlerTypes
 
-                        match msg |> Array.length with
-                        | 0 -> completion.Invoke()
-                        | _ -> msg |> Array.iter (fun x -> 
-                                            try x.Invoke(message, completion)
-                                            with exn -> 
-                                                errors'.Post (MessageHandleException { OriginalMessage = message; Error = exn }))
-                    })
-                |> Agent.reportErrorsTo (failure.Invoke |> Agent.supervisor)
-                |> Agent.start)
-            |> fun y -> 
-                match message with
-                | null -> failwith "Message is null!"
-                | _ -> 
-                    try message.GetType() |> getHandler |> y.Post
-                    with exn -> errors'.Post (MessageHandleException { OriginalMessage = message; Error = exn })
+  let catalog = ConcurrentDictionary<_,_> ()
+      
+  new (resolver,handlerTypes,onError:Action<RoutingException>) = 
+    new MessageRouter<_> (resolver,handlerTypes,(fun x -> onError.Invoke x))
+
+  member __.Route (message:'msg,onComplete,onError) =
+    match typeof<'msg> |> Meta.findHandlers catalog extractor with
+    | CommandHandler (Some item) -> // handle command 
+                                    let worker = worker message onComplete onError
+                                    worker <-- ([item] :> IEnumerable)
+    | EventHandlers items
+      when Seq.length items > 0 ->  // handle event
+                                    let worker = worker message onComplete onError
+                                    worker <-- (items :> IEnumerable)
+    // no handlers found
+    | EventHandlers  _            
+    | CommandHandler _  ->  foreman <-- ( typeof<'msg> 
+                                          |> NoHandlersFound
+                                          |> routeEx message )
+                            onComplete ()
+    // something went wrong
+    | Error error -> foreman <-- routeEx message error
+
+  override __.Finalize () =
+    if not disposed then
+      disposed <- true
+      shutdown.Cancel  ()
+      shutdown.Dispose ()
+
+  interface IMessageRouter with
+    member self.Route (message,onComplete,onError) = 
+      self.Route  (unbox<_> message,
+                  (fun () -> onComplete.Invoke ()),
+                  (fun c x -> onError.Invoke (c,x)))
+
+  interface IDisposable with
+    member self.Dispose () =
+      self.Finalize ()
+      GC.SuppressFinalize self

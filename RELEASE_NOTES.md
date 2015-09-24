@@ -1,8 +1,13 @@
-### 1.4.0-internal
-* Upgraded to use v3.1.1 of F#
+### 1.0 - Unreleased
+* More awesome stuff coming
+* Added SourceLink for Source Indexing PDB
 
-### 1.4.1 (2015/01/23)
-* Updated type-matching to treat union sub-types as the union base-type
+#### 0.5.1-beta - November 6 2013
+* Improved quality of solution-wide README.md files
+ 
+#### 0.5.0-beta - October 29 2013
+* Improved quality of solution-wide README.md files
 
-### 1.4.2
-* Changed FSharp.Core.dll dependency to latest version from FSSF (unsigned)
+#### 0.0.1-beta - October 24 2013
+* Changed name from fsharp-project-scaffold to FSharp.ProjectScaffold
+* Initial release

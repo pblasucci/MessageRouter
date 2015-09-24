@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,12 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter", "src\MessageRouter\MessageRouter.fsproj", "{97BD1613-619E-4A82-81DE-5B3ABCC9201E}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter", "src\MessageRouter\MessageRouter.fsproj", "{FEB8EB4D-95D6-4D1E-8F76-224ED0969C66}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60BC93-E09B-4E5F-9D85-95A519479D54}"
 	ProjectSection(SolutionItems) = preProject
 		build.fsx = build.fsx
-		nuget\MessageRouter.nuspec = nuget\MessageRouter.nuspec
 		README.md = README.md
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
@@ -29,27 +28,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{8E6D5255-776D-4B61-85F9-73C37AA1FB9A}"
 	ProjectSection(SolutionItems) = preProject
 		docs\content\index.fsx = docs\content\index.fsx
-		docs\content\tutorial.fsx = docs\content\tutorial.fsx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD-2B06-4030-9F0F-DC548F98E1C4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.Tests", "tests\MessageRouter.Tests\MessageRouter.Tests.fsproj", "{993A9B52-0B3E-44D2-83F5-30EF678C31B8}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.Tests", "tests\MessageRouter.Tests\MessageRouter.Tests.fsproj", "{58D91694-045B-40CC-A820-557208938909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageRouter.Interfaces", "src\MessageRouter.Interfaces\MessageRouter.Interfaces.csproj", "{275FBC0B-5EAB-4051-A42F-BE6AF4E8D52F}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.Reflection", "src\MessageRouter.Reflection\MessageRouter.Reflection.fsproj", "{49DD1BB2-EA5B-4AEE-8A4C-974852B19E52}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageRouter.Types", "src\MessageRouter.Types\MessageRouter.Types.fsproj", "{5F98681D-86F5-4354-A1C1-9F1154F2813F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTypes.CSharp", "tests\SampleTypes\SampleTypes.CSharp.csproj", "{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F1C55069-E402-4E1B-AD2C-6A7AEA04F399}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageRouter.Common", "src\MessageRouter.Common\MessageRouter.Common.csproj", "{A6E2A1D4-B2EF-43FB-844C-7390BE95DFD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,30 +42,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{97BD1613-619E-4A82-81DE-5B3ABCC9201E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97BD1613-619E-4A82-81DE-5B3ABCC9201E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97BD1613-619E-4A82-81DE-5B3ABCC9201E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97BD1613-619E-4A82-81DE-5B3ABCC9201E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{993A9B52-0B3E-44D2-83F5-30EF678C31B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{993A9B52-0B3E-44D2-83F5-30EF678C31B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{993A9B52-0B3E-44D2-83F5-30EF678C31B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{993A9B52-0B3E-44D2-83F5-30EF678C31B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{275FBC0B-5EAB-4051-A42F-BE6AF4E8D52F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{275FBC0B-5EAB-4051-A42F-BE6AF4E8D52F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{275FBC0B-5EAB-4051-A42F-BE6AF4E8D52F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{275FBC0B-5EAB-4051-A42F-BE6AF4E8D52F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49DD1BB2-EA5B-4AEE-8A4C-974852B19E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49DD1BB2-EA5B-4AEE-8A4C-974852B19E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49DD1BB2-EA5B-4AEE-8A4C-974852B19E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49DD1BB2-EA5B-4AEE-8A4C-974852B19E52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F98681D-86F5-4354-A1C1-9F1154F2813F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F98681D-86F5-4354-A1C1-9F1154F2813F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F98681D-86F5-4354-A1C1-9F1154F2813F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F98681D-86F5-4354-A1C1-9F1154F2813F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB8EB4D-95D6-4D1E-8F76-224ED0969C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB8EB4D-95D6-4D1E-8F76-224ED0969C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB8EB4D-95D6-4D1E-8F76-224ED0969C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB8EB4D-95D6-4D1E-8F76-224ED0969C66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D91694-045B-40CC-A820-557208938909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D91694-045B-40CC-A820-557208938909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D91694-045B-40CC-A820-557208938909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D91694-045B-40CC-A820-557208938909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6E2A1D4-B2EF-43FB-844C-7390BE95DFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6E2A1D4-B2EF-43FB-844C-7390BE95DFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6E2A1D4-B2EF-43FB-844C-7390BE95DFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6E2A1D4-B2EF-43FB-844C-7390BE95DFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,7 +61,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{83F16175-43B1-4C90-A1EE-8E351C33435D} = {A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}
 		{8E6D5255-776D-4B61-85F9-73C37AA1FB9A} = {A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}
-		{993A9B52-0B3E-44D2-83F5-30EF678C31B8} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
-		{1609AD6D-9857-4AD8-A6C7-83A7066D6D3E} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
+		{58D91694-045B-40CC-A820-557208938909} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 	EndGlobalSection
 EndGlobal

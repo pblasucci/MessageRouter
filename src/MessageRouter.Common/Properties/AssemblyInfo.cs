@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SampleTypes")]
+[assembly: AssemblyTitle("MessageRouter.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Quicken Loans")]
-[assembly: AssemblyProduct("SampleTypes")]
-[assembly: AssemblyCopyright("Copyright © Quicken Loans 2014")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("MessageRouter.Common")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5cbe65c0-60af-4006-898f-5e7d07115441")]
+[assembly: Guid("8a263c5d-b586-4f7d-b657-f122b85db53c")]
 
 // Version information for an assembly consists of the following four values:
 //
