@@ -149,7 +149,7 @@
     <Compile Include="FsCheckAddin.fs">
       <Paket>True</Paket>
     </Compile>
-    <Compile Include="Tests.fs" />
+    <Compile Include="SampleDomain.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
