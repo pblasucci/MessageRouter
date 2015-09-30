@@ -2,20 +2,19 @@
 
 open MessageRouter.Common
 open System
-open System.Collections
 open System.Collections.Concurrent
 open System.Threading
 
 /// Routes messages (i.e. ICommand or IEvent instances) to 
 /// the appropriate handler (i.e. an IHandleCommand or IHandleEvent instance)
-type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
+type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
   let mutable disposed = false
 
   let shutdown = new CancellationTokenSource ()
   
-  let supervisor = trapError self onError
-                |> Agent.cancelWith shutdown.Token
-                |> Agent.start
+  let supervisor =  trapError self onError
+                    |> Agent.cancelWith shutdown.Token
+                    |> Agent.start
 
   let worker message onComplete onError = 
     message
@@ -28,9 +27,12 @@ type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
 
   let catalog = ConcurrentDictionary<_,_> ()
     
-  /// .ctor for languages lacking support for curried F# functions 
+  /// .ctor for languages lacking support for F# functions 
   new (resolver,handlerTypes,onError:Action<RoutingException>) = 
-    new MessageRouter<_> (resolver,handlerTypes,(fun x -> onError.Invoke x))
+    new MessageRouter (resolver,handlerTypes,(fun x -> onError.Invoke x))
+
+  /// Allows other to integrate into a MessageRouter driven shutdown process
+  member __.CancellationToken = shutdown
 
   /// Routes the given message to any available handlers
   /// and executes the appropriate callback once all handlers are done
@@ -38,11 +40,11 @@ type MessageRouter<'msg> (resolver:IResolver,handlerTypes,onError) as self =
     match typeof<'msg> |> Meta.findHandlers catalog extractor with
     | CommandHandler (Some item) -> // handle command 
                                     let worker = worker message onComplete onError
-                                    worker <-- ([item] :> IEnumerable)
+                                    worker <-- RunCommand item
     | EventHandlers items
       when Seq.length items > 0 ->  // handle event
                                     let worker = worker message onComplete onError
-                                    worker <-- (items :> IEnumerable)
+                                    worker <-- RunEvent (List.ofSeq items)
     // no handlers found
     | EventHandlers  _            
     | CommandHandler _  ->  supervisor <-- ( typeof<'msg> 

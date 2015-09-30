@@ -1,4 +1,4 @@
-namespace MessageRouter.Testing
+namespace MessageRouter.Tests
 
 open NUnit.Core.Extensibility
 

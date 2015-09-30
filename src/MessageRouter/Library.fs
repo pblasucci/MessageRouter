@@ -43,6 +43,16 @@ module internal Library =
     | EventHandlers   of ('evt action) seq
     | Error           of exn
   
+  type BatchMsg =
+    | RunCommand  of handler  :ICommand action
+    | RunEvent    of handlers :(IEvent   action) list
+
+  type Async with
+    /// Returns an asynchronous computation that waits for the given task to complete
+    static member AwaitUnitTask (t:Task) = 
+      t.ContinueWith<_> (fun t -> if t.IsFaulted then raise t.Exception)
+      |> Async.AwaitTask
+
   let inline routeEx context error = RoutingException (context,error)
 
   let inline (<--) (agent:Agent<_>) msg = agent.Post msg
@@ -63,20 +73,24 @@ module internal Library =
     async { match actions with
             | []        ->  return errors
             | act::rest ->  let! res =  (act message shutdown)
-                                        |> Async.AwaitTask 
+                                        |> Async.AwaitUnitTask 
                                         |> Async.Catch
                             let errs =  match res with
                                         | Choice1Of2 _ ->     errors
                                         | Choice2Of2 x -> (x::errors)
                             return! runActions shutdown rest errs message }
 
-  let batchActions onComplete onError message (inbox:Agent<_>) = 
+  let batchActions onComplete onError (message:obj) (inbox:Agent<_>) = 
     async { let! shutdown = Async.CancellationToken 
-            let! handlers = inbox.Receive ()      
-            let  actions  = handlers 
-                            |> Seq.cast<_> 
-                            |> Seq.toList
-            let! errors   = message |> runActions shutdown actions []
+            let! handlers = inbox.Receive ()   
+            let! errors =
+              match handlers with
+              | RunCommand  act   ->  message 
+                                      |> unbox<ICommand> 
+                                      |> runActions shutdown [act] []
+              | RunEvent    acts  ->  message 
+                                      |> unbox<IEvent> 
+                                      |> runActions shutdown acts []
             // invoke appropriate callback (based on whether any actions failed)
             if List.isEmpty errors 
               then onComplete ()

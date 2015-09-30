@@ -150,6 +150,9 @@
       <Paket>True</Paket>
     </Compile>
     <Compile Include="SampleDomain.fs" />
+    <Compile Include="TypeAnalyzerTests.fs" />
+    <Compile Include="AssemblyScannerTests.fs" />
+    <Compile Include="MessageRouterTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>

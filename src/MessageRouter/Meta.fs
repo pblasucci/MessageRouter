@@ -25,9 +25,7 @@ let (|Method|_|) (expr:Expr<'e>) =
   walk expr
 
 let (|Interface|_|) (target:Type) (suspect:Type) =
-  match suspect.GetInterface (target.Name,true) with
-  | null  -> None
-  | _     -> Some suspect
+  if suspect.HasStrictInterface target then Some suspect else None
 
 let (|Command|_|) suspect = (|Interface|_|) (typeof<ICommand>) suspect
 let (|Event|_|)   suspect = (|Interface|_|) (typeof<IEvent>)   suspect

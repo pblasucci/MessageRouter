@@ -72,24 +72,25 @@ namespace MessageRouter.Common
     }
     
     // Type should implement a message interface exactly once (or not at all)
-    private static Boolean messageOf (this Type test, params Type[] ifaces)
+    private static Boolean messageOf (this Type test, params Type[] targets)
     {
-      var query = from    target  in ifaces
-                  from    subject in test.GetInterfaces()
-                  select  subject == target;
-      return query.SingleOrDefault();
+      var query = from targ in targets
+                  from subj in test.GetInterfaces()
+                  where   !subj.IsGenericType
+                  select  subj == targ;
+      return query.SingleOrDefault (result => result);
     }
 
     // Type should implement a handler interface exactly once (or not at all)
-    private static Boolean handlerFor (this Type test, params Type[] ifaces)
+    private static Boolean handlerFor (this Type test, params Type[] targets)
     {
       if (test.IsConcrete())
       {
-        var query = from    target  in ifaces
-                    from    subject in test.GetInterfaces()
-                    where   subject.IsGenericType
-                    select  subject.GetGenericTypeDefinition() == target;
-        return query.SingleOrDefault();
+        var query = from targ in targets
+                    from subj in test.GetInterfaces()
+                    where   subj.IsGenericType
+                    select  subj.GetGenericTypeDefinition() == targ;
+        return query.SingleOrDefault (result => result);
       }
       return false;
     }
