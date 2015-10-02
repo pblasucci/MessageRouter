@@ -5,8 +5,6 @@ using System.Linq;
 
 namespace MessageRouter.Common
 {
-  using Errors = IEnumerable<Exception>;
-
   /// <summary>
   /// Adds useful helpers to System.Type instances
   /// </summary>

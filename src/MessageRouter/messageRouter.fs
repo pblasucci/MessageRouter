@@ -36,8 +36,9 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
 
   /// Routes the given message to any available handlers
   /// and executes the appropriate callback once all handlers are done
-  member __.Route (message:'msg,onComplete,onError) =
-    match typeof<'msg> |> Meta.findHandlers catalog extractor with
+  member __.Route (message,onComplete,onError) =
+    let msgType = message.GetType ()
+    match msgType |> Meta.findHandlers catalog extractor with
     | CommandHandler (Some item) -> // handle command 
                                     let worker = worker message onComplete onError
                                     worker <-- RunCommand item
@@ -47,9 +48,9 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
                                     worker <-- RunEvent (List.ofSeq items)
     // no handlers found
     | EventHandlers  _            
-    | CommandHandler _  ->  supervisor <-- ( typeof<'msg> 
-                                          |> NoHandlersFound
-                                          |> routeEx message )
+    | CommandHandler _  ->  supervisor <-- (msgType
+                                            |> NoHandlersFound
+                                            |> routeEx message)
                             onComplete ()
     // something went wrong
     | Error error -> supervisor <-- routeEx message error
@@ -62,7 +63,7 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
 
   interface IMessageRouter with
     member self.Route (message,onComplete,onError) = 
-      self.Route  (unbox<_> message,
+      self.Route  (message,
                   (fun () -> onComplete.Invoke ()),
                   (fun c x -> onError.Invoke (c,x)))
 

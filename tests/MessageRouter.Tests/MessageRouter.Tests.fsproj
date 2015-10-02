@@ -149,7 +149,7 @@
     <Compile Include="FsCheckAddin.fs">
       <Paket>True</Paket>
     </Compile>
-    <Compile Include="SampleDomain.fs" />
+    <Compile Include="Library.fs" />
     <Compile Include="TypeAnalyzerTests.fs" />
     <Compile Include="AssemblyScannerTests.fs" />
     <Compile Include="MessageRouterTests.fs" />
@@ -157,6 +157,16 @@
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MessageRouter.SampleDomains.Arithmetic\MessageRouter.SampleDomains.Arithmetic.csproj">
+      <Name>MessageRouter.SampleDomains.Arithmetic</Name>
+      <Project>{2cc0b000-3bd5-4272-b24d-0253013859d1}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\MessageRouter.SampleDomains.Banking\MessageRouter.SampleDomains.Banking.vbproj">
+      <Name>MessageRouter.SampleDomains.Banking</Name>
+      <Project>{a94117af-cf94-4666-8162-2dd84217a16a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
