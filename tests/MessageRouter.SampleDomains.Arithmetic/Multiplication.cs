@@ -1,5 +1,6 @@
 ﻿using MessageRouter.Common;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,14 +55,22 @@ namespace MessageRouter.SampleDomains.Arithmetic.Multiplication
 
   public sealed class InfixMultipliedEventHandler : IHandleEvent<MultipliedEvent>
   {
+    private readonly IDictionary<String,String> store;
+
+    public InfixMultipliedEventHandler (IDictionary<String,String> store)
+    {
+      this.store = store;
+    }
+
     public Task Handle (MultipliedEvent @event, CancellationToken shutdown)
     {
       return Task.Factory.StartNew(() => {
-        var infix = String.Format ("{2} : ({0} * {1})"
+        var key = String.Format("{0:X}_Infix", @event.GetHashCode());
+        Thread.Sleep(250); // simulate work!
+        store[key] = String.Format("{2} : ({0} * {1})"
                                   ,@event.Multiplicand
                                   ,@event.Multiplier
                                   ,@event.Product);
-        Console.WriteLine("[{0}] {1}", DateTime.Now.ToString("O"), infix);
       }
       ,shutdown);
     }
@@ -69,14 +78,21 @@ namespace MessageRouter.SampleDomains.Arithmetic.Multiplication
 
   public sealed class PrefixMultipliedEventHandler : IHandleEvent<MultipliedEvent>
   {
+    private readonly IDictionary<String,String> store;
+
+    public PrefixMultipliedEventHandler (IDictionary<String,String> store)
+    {
+      this.store = store;
+    }
+
     public Task Handle (MultipliedEvent @event, CancellationToken shutdown)
     {
       return Task.Factory.StartNew(() => {
-        var prefix = String.Format ("{2} : (* {1} {0})"
-                                  ,@event.Multiplicand
-                                  ,@event.Multiplier
-                                  ,@event.Product);
-        Console.WriteLine("[{0}] {1}", DateTime.Now.ToString("O"), prefix);
+        var key = String.Format("{0:X}_Prefix", @event.GetHashCode());
+        store[key] = String.Format ("{2} : (* {0} {1})"
+                                   ,@event.Multiplicand
+                                   ,@event.Multiplier
+                                   ,@event.Product);
       }
       ,shutdown);
     }
@@ -84,14 +100,22 @@ namespace MessageRouter.SampleDomains.Arithmetic.Multiplication
 
   public sealed class PostfixMultipliedEventHandler : IHandleEvent<MultipliedEvent>
   {
+    private readonly IDictionary<String,String> store;
+
+    public PostfixMultipliedEventHandler (IDictionary<String,String> store)
+    {
+      this.store = store;
+    }
+
     public Task Handle (MultipliedEvent @event, CancellationToken shutdown)
     {
       return Task.Factory.StartNew(() => {
-        var postfix = String.Format ("{2} : ({0} {1} *)"
+        Thread.Sleep(150); // simulate work!
+        var key = String.Format("{0:X}_Postfix", @event.GetHashCode());
+        store[key] = String.Format("{2} : ({0} {1} *)"
                                   ,@event.Multiplicand
                                   ,@event.Multiplier
-                                  ,@event.Product);
-        Console.WriteLine("[{0}] {1}", DateTime.Now.ToString("O"), postfix);
+                                  ,@event.Product); 
       }
       ,shutdown);
     }

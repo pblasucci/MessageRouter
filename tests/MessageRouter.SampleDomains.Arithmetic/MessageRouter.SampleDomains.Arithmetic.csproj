@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Addition.cs" />
     <Compile Include="Division.cs" />
+    <Compile Include="Exponentiation.cs" />
     <Compile Include="Multiplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subtraction.cs" />

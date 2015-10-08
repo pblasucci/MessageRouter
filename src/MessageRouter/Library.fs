@@ -1,3 +1,18 @@
+(*
+Copyright 2015 Quicken Loans
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*)
 namespace MessageRouter
 
 open System
@@ -10,18 +25,27 @@ type RoutingException (context:obj,inner:exn) =
   inherit Exception (inner.Message,inner)
   /// Provides contextual information for the InnerException
   member __.ExecutionContext = context
+  /// Converts a nested sequence of RoutingExceptions into a flat list of
+  /// execution contexts paired with a non-RoutingException error
+  member X.Unwind () =
+    let rec unwind context (error:obj) = 
+      match error with
+      | :? RoutingException as x -> 
+        unwind (x.ExecutionContext::context) x.InnerException 
+      | x -> context |> List.rev |> List.toSeq,x
+    X |> unwind []
 
 /// There can be only one!
-exception MultipleCommandHandlers of Type
+exception MultipleCommandHandlers of target:Type
 
 /// Given message type implements neither `ICommand` nor `IEvent`
-exception InvalidMessage of Type
+exception InvalidMessage of target:Type
 
 /// Unable to manipulate the given type definition
-exception InvalidTypeDef of Type
+exception InvalidTypeDef of target:Type
 
 /// Unable to resolve any handlers for a given message type
-exception NoHandlersFound of message:Type
+exception NoHandlersFound of target:Type
 
 /// Raised from code paths into which it should not be possible to fall!
 exception QuantumFluxError

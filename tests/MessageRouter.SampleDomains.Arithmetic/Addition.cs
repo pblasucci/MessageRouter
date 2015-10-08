@@ -1,5 +1,6 @@
 ﻿using MessageRouter.Common;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,10 +44,19 @@ namespace MessageRouter.SampleDomains.Arithmetic.Addition
 
   public sealed class AddCommandHandler : IHandleCommand<AddCommand>
   {
+    private readonly IDictionary<Int32,Tuple<DateTime,Object>> store;
+
+    public AddCommandHandler (IDictionary<Int32,Tuple<DateTime,Object>> store)
+    {
+      this.store = store;
+    }
+
     public Task Handle (AddCommand command, CancellationToken shutdown)
     {
       return Task.Factory.StartNew(() => {
-        Console.WriteLine("[{0}] {1}", DateTime.Now.ToString("O"), command);
+        var sum   = command.Addend + command.Augend;
+        var added = new AddedEvent(command.Addend, command.Augend, sum);
+        store[added.GetHashCode()] = Tuple.Create(DateTime.UtcNow, (Object) added); 
       }
       ,shutdown);
     }

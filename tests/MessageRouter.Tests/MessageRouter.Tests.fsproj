@@ -62,6 +62,54 @@
   </Target>
   -->
   <Import Project="..\..\.paket\paket.targets" />
+  <ItemGroup>
+    <Compile Include="FsCheckAddin.fs">
+      <Paket>True</Paket>
+    </Compile>
+    <Compile Include="Library.fs" />
+    <Compile Include="Arithmetic.fs" />
+    <Compile Include="BankingLoad.fs" />
+    <None Include="paket.references" />
+    <Content Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessageRouter.SampleDomains.Arithmetic\MessageRouter.SampleDomains.Arithmetic.csproj">
+      <Name>MessageRouter.SampleDomains.Arithmetic</Name>
+      <Project>{2cc0b000-3bd5-4272-b24d-0253013859d1}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\MessageRouter.SampleDomains.Banking\MessageRouter.SampleDomains.Banking.vbproj">
+      <Name>MessageRouter.SampleDomains.Banking</Name>
+      <Project>{a94117af-cf94-4666-8162-2dd84217a16a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.core.interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.util.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <ProjectReference Include="..\..\src\MessageRouter.Common\MessageRouter.Common.csproj">
+      <Name>MessageRouter.Common</Name>
+      <Project>{a6e2a1d4-b2ef-43fb-844c-7390be95dfd5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\MessageRouter\MessageRouter.fsproj">
+      <Name>MessageRouter</Name>
+      <Project>{feb8eb4d-95d6-4d1e-8f76-224ed0969c66}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
       <ItemGroup>
@@ -116,6 +164,13 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+      <Paket>True</Paket>
+    </Reference>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')">
       <ItemGroup>
@@ -145,58 +200,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <Compile Include="FsCheckAddin.fs">
-      <Paket>True</Paket>
-    </Compile>
-    <Compile Include="Library.fs" />
-    <Compile Include="TypeAnalyzerTests.fs" />
-    <Compile Include="AssemblyScannerTests.fs" />
-    <Compile Include="MessageRouterTests.fs" />
-    <None Include="paket.references" />
-    <Content Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MessageRouter.SampleDomains.Arithmetic\MessageRouter.SampleDomains.Arithmetic.csproj">
-      <Name>MessageRouter.SampleDomains.Arithmetic</Name>
-      <Project>{2cc0b000-3bd5-4272-b24d-0253013859d1}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\MessageRouter.SampleDomains.Banking\MessageRouter.SampleDomains.Banking.vbproj">
-      <Name>MessageRouter.SampleDomains.Banking</Name>
-      <Project>{a94117af-cf94-4666-8162-2dd84217a16a}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.core">
-      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.core.interfaces">
-      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.core.interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.util">
-      <HintPath>..\..\packages\NUnit.Runners\tools\lib\nunit.util.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-      <Paket>True</Paket>
-    </Reference>
-    <ProjectReference Include="..\..\src\MessageRouter.Common\MessageRouter.Common.csproj">
-      <Name>MessageRouter.Common</Name>
-      <Project>{a6e2a1d4-b2ef-43fb-844c-7390be95dfd5}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\MessageRouter\MessageRouter.fsproj">
-      <Name>MessageRouter</Name>
-      <Project>{feb8eb4d-95d6-4d1e-8f76-224ed0969c66}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
