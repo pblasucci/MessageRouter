@@ -4,8 +4,8 @@
 #I "../../bin"
 
 (**
-F# Project Scaffold
-===================
+MessageRouter
+======================
 
 Documentation
 
@@ -13,39 +13,25 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The F# ProjectTemplate library can be <a href="https://nuget.org/packages/FSharp.ProjectTemplate">installed from NuGet</a>:
-      <pre>PM> Install-Package FSharp.ProjectTemplate</pre>
+      The MessageRouter library can be <a href="https://nuget.org/packages/MessageRouter">installed from NuGet</a>:
+      <pre>PM> Install-Package MessageRouter</pre>
     </div>
   </div>
   <div class="span1"></div>
 </div>
 
-Example
--------
-
-This example demonstrates using a function defined in this sample library.
-
-*)
-#r "FSharp.ProjectTemplate.dll"
-open FSharp.ProjectTemplate
-
-printfn "hello = %i" <| Library.hello 0
-
-(**
-Some more info
+MessageRouter provides a framework for, and robust implementation of, 
+in-process dynamic dispatch of messages to handlers, based on type. The
+framework is expressed as interfaces, which are defined in the
+MessageRouter.Common project. Meanwhile, the MessageRouter project provides
+a component which fully orchestrates the dispatching in an asynchronous manner.
 
 Samples & documentation
 -----------------------
 
-The library comes with comprehensible documentation. 
-It can include a tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
-The API reference is automatically generated from Markdown comments in the library implementation.
+ * [Tutorial]() comming soon
 
- * [Tutorial](tutorial.html) contains a further explanation of this sample library.
-
- * [API Reference](reference/index.html) contains automatically generated documentation for all types, modules
-   and functions in the library. This includes additional brief samples on using most of the
-   functions.
+ * [API Reference](reference/index.html)
  
 Contributing and copyright
 --------------------------
@@ -55,13 +41,13 @@ the project and submit pull requests. If you're adding a new public API, please 
 consider adding [samples][content] that can be turned into a documentation. You might
 also want to read the [library design notes][readme] to understand how it works.
 
-The library is available under Public Domain license, which allows modification and 
+The library is available under the Apache License, which allows modification and 
 redistribution for both commercial and non-commercial purposes. For more information see the 
 [License file][license] in the GitHub repository. 
 
-  [content]: https://github.com/fsprojects/FSharp.ProjectScaffold/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/FSharp.ProjectScaffold
-  [issues]: https://github.com/fsprojects/FSharp.ProjectScaffold/issues
-  [readme]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/README.md
-  [license]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/MessageRouter/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/MessageRouter
+  [issues]: https://github.com/fsprojects/MessageRouter/issues
+  [readme]: https://github.com/fsprojects/MessageRouter/blob/master/README.md
+  [license]: https://github.com/fsprojects/MessageRouter/blob/master/LICENSE.txt
 *)

@@ -3,10 +3,10 @@ open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("MessageRouter")>]
 [<assembly: AssemblyProductAttribute("MessageRouter")>]
-[<assembly: AssemblyDescriptionAttribute("A CQRS (event driven) message router in F#")>]
-[<assembly: AssemblyVersionAttribute("1.4.0")>]
-[<assembly: AssemblyFileVersionAttribute("1.4.0")>]
+[<assembly: AssemblyDescriptionAttribute("MessageRouter")>]
+[<assembly: AssemblyVersionAttribute("2.0.0")>]
+[<assembly: AssemblyFileVersionAttribute("2.0.0")>]
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] Version = "1.4.0"
+    let [<Literal>] Version = "2.0.0"
