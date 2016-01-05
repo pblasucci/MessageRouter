@@ -24,9 +24,9 @@ module ArithmeticLoad =
   // build dependencies
   let resolver  = DomainResolvers.arithmetic store cache
   let scanner   = AssemblyScanner "MessageRouter.SampleDomains.Arithmetic.dll"
-  let router    = new MessageRouter (resolver
+  let router    = new MessageRouter (capture errors
                                     ,scanner.GetAllHandlers()
-                                    ,capture errors)
+                                    ,resolver)
 
   let [<Literal>] SAMPLE = 1000
 
@@ -42,12 +42,12 @@ module ArithmeticLoad =
                     |> Gen.sample 10 SAMPLE
     // dispatch messages
     for msg in messages do
-      router.Route  (msg
-                    ,fun ()   ->  errors.Push None
+      router.Route  (fun () -> errors.Push None
                     ,fun c xs ->  for x in xs do 
                                     let rx = RoutingException (c,x) 
-                                    rx |> capture errors)
-    // await completion               
+                                    rx |> capture errors
+                    ,msg)
+    // await completion
     while errors.Count < SAMPLE do ((* wait *))
 
   [<TearDown>]

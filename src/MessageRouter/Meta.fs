@@ -56,7 +56,7 @@ let getMethodForCommand messageType =
   | Method m  -> (target,target.GetMethod m.Name)
   | _         -> raise QuantumFluxError
 
-let getMethodForEvent messageType =  
+let getMethodForEvent messageType = 
   let target = fillOpenGeneric<IHandleEvent<_>> messageType
   match <@ fun (t:IHandleEvent<_>) args -> t.Handle args @> with
   | Method m  -> (target,target.GetMethod m.Name)
@@ -80,9 +80,9 @@ let buildCommandHandler resolver handlerTypes messageType =
   //NOTE: the type returned from Seq.choose is 
   //      the type which will be pulled from the IResolver at execution!!!
   match List.ofSeq handlerTypes with
-  | []    ->  CommandHandler  None
-  | h::[] ->  CommandHandler (buildAction h)
-  | _     ->  Error (MultipleCommandHandlers messageType)
+  | []  ->  CommandHandler  None
+  | [h] ->  CommandHandler (buildAction h)
+  | _   ->  Error (MultipleCommandHandlers messageType)
 
 let buildEventHandlers resolver handlerTypes messageType =
   let iface,handle  = getMethodForEvent messageType

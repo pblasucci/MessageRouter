@@ -106,7 +106,7 @@ module internal Library =
 
   let batchActions onComplete onError (message:obj) (inbox:Agent<_>) = 
     async { let! shutdown = Async.CancellationToken 
-            let! handlers = inbox.Receive ()   
+            let! handlers = inbox.Receive () 
             let! errors =
               match handlers with
               | RunCommand  act   ->  message 
@@ -118,7 +118,7 @@ module internal Library =
             // invoke appropriate callback (based on whether any actions failed)
             if List.isEmpty errors 
               then onComplete ()
-              else onError message errors
+              else onError message (List.toSeq errors)
             //MAYBE: eliminate callbacks in favor of returning Choice<unit,exn seq>?
             return () }
 
