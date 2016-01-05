@@ -22,7 +22,7 @@ open System.Threading
 
 /// Routes messages (i.e. ICommand or IEvent instances) to 
 /// the appropriate handler (i.e. an IHandleCommand or IHandleEvent instance)
-type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
+type MessageRouter (onError,handlerTypes,resolver) as self =
   let mutable disposed = false
 
   let shutdown = new CancellationTokenSource ()
@@ -41,17 +41,17 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
   let extractor = Meta.extractHandlers resolver handlerTypes
 
   let catalog = ConcurrentDictionary<_,_> ()
-    
+
   /// .ctor for languages lacking support for F# functions 
-  new (resolver,handlerTypes,onError:Action<RoutingException>) = 
-    new MessageRouter (resolver,handlerTypes,(fun x -> onError.Invoke x))
+  new (resolver:IResolver,handlerTypes:Type seq,onError:Action<RoutingException>) = 
+    new MessageRouter ((fun x -> onError.Invoke x),handlerTypes,resolver)
 
   /// Allows other to integrate into a MessageRouter driven shutdown process
   member __.CancellationToken = shutdown
 
   /// Routes the given message to any available handlers
   /// and executes the appropriate callback once all handlers are done
-  member __.Route (message,onComplete,onError) =
+  member __.Route (onComplete,onError,message) = 
     let msgType = message.GetType ()
     match msgType |> Meta.findHandlers catalog extractor with
     | CommandHandler (Some item) -> // handle command 
@@ -62,13 +62,20 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
                                     let worker = worker message onComplete onError
                                     worker <-- RunEvent (List.ofSeq items)
     // no handlers found
-    | EventHandlers  _            
+    | EventHandlers  _
     | CommandHandler _  ->  supervisor <-- (msgType
                                             |> NoHandlersFound
                                             |> routeEx message)
                             onComplete ()
     // something went wrong
     | Error error -> supervisor <-- routeEx message error
+
+  /// Routes the given message to any available handlers
+  /// and executes the appropriate callback once all handlers are done
+  member self.Route (message,onComplete:Action,onError:Action<obj,exn seq>) =
+    self.Route  (fun () -> onComplete.Invoke()
+                ,fun c xs -> onError.Invoke(c,xs)
+                ,message)
 
   override __.Finalize () =
     if not disposed then
@@ -78,9 +85,7 @@ type MessageRouter (resolver:IResolver,handlerTypes,onError) as self =
 
   interface IMessageRouter with
     member self.Route (message,onComplete,onError) = 
-      self.Route  (message,
-                  (fun () -> onComplete.Invoke ()),
-                  (fun c x -> onError.Invoke (c,x)))
+      self.Route (message,onComplete,onError)
 
   interface IDisposable with
     member self.Dispose () =

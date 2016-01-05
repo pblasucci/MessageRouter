@@ -15,7 +15,9 @@
 
         Dim okEvent As New CreditEvent(command.AccountID, command.Amount, Date.UtcNow)
         Router.Route(okEvent, AddressOf Library.Ignore, AddressOf Library.Reraise)
-      End Sub, CancellationToken := shutdown)
+      End Sub, 
+      CancellationToken := shutdown)
+
     End Function
 End Class
 
@@ -25,7 +27,7 @@ Public NotInheritable Class CreditEventHandler
   Public Function Handle([event] As CreditEvent, shutdown As CancellationToken) As Task _ 
     Implements IHandleEvent(Of CreditEvent).Handle
 
-    Return Task.Factory.StartNew (Sub () Console.WriteLine ([event]), CancellationToken := shutdown)
+    Return Task.Factory.StartNew (Sub () Console.WriteLine ([event]), 
+                                  CancellationToken := shutdown)
   End Function
-
 End Class

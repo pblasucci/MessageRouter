@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageRouter.SampleDomains
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MessageRouter.SampleDomains.Banking", "tests\MessageRouter.SampleDomains.Banking\MessageRouter.SampleDomains.Banking.vbproj", "{A94117AF-CF94-4666-8162-2DD84217A16A}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MessageRouter.SampleHost", "tests\MessageRouter.SampleHost\MessageRouter.SampleHost.vbproj", "{F51C004C-73A5-423B-83FF-6A4B0E7E7933}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{A94117AF-CF94-4666-8162-2DD84217A16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A94117AF-CF94-4666-8162-2DD84217A16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A94117AF-CF94-4666-8162-2DD84217A16A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F51C004C-73A5-423B-83FF-6A4B0E7E7933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51C004C-73A5-423B-83FF-6A4B0E7E7933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51C004C-73A5-423B-83FF-6A4B0E7E7933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51C004C-73A5-423B-83FF-6A4B0E7E7933}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,5 +83,6 @@ Global
 		{58D91694-045B-40CC-A820-557208938909} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{2CC0B000-3BD5-4272-B24D-0253013859D1} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{A94117AF-CF94-4666-8162-2DD84217A16A} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
+		{F51C004C-73A5-423B-83FF-6A4B0E7E7933} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 	EndGlobalSection
 EndGlobal
