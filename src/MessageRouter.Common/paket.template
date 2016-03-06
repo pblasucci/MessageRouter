@@ -16,6 +16,6 @@ copyright
 tags
     F# fsharp in-memory message dispatch router CQRS
 summary
-    A CQRS (Event-driven) message router in F#
+    Common interfaces and helpers for working with MessageRouter
 description
-    A CQRS (Event-driven) message router in F#
+    Common interfaces and helpers for working with MessageRouter
