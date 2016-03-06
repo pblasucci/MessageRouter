@@ -22,7 +22,7 @@
 * Extended testing to cover C# and VB
 * Switched from unlicense to Apache license
 
-### 2.0.0 - (2016/03/05)
+### 2.0.1 - (2016/03/05)
 * Refactored `MessageRouter` public API very slightly to remove ambiguities between F#-friendly and non-F#-friendly overloads
 * Fixed `StackOverflowException` in overloaded `MessageRouter` constructor call
 * Added non-F# sample host project (in VB), for testing API comparability
