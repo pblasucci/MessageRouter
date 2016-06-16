@@ -58,18 +58,18 @@ module internal Library =
   open System.Threading.Tasks
 
   // wraps invoking IHandleCommand<_> or IHandleEvent<_> into a curried function
-  type 'msg action = ('msg -> CancellationToken -> Task)
+  type 'msg handle = ('msg -> CancellationToken -> Task)
 
   // expresses possible results of resolving the handler(s) for a message type
   type Extraction<'cmd,'evt when 'cmd :> ICommand 
                             and  'evt :> IEvent> =
-    | CommandHandler  of ('cmd action) option
-    | EventHandlers   of ('evt action) seq
+    | CommandHandler  of ('cmd handle) option
+    | EventHandlers   of ('evt handle) seq
     | Error           of exn
   
   type BatchMsg =
-    | RunCommand  of handler  :ICommand action
-    | RunEvent    of handlers :(IEvent   action) list
+    | RunCommand  of handler  :ICommand handle
+    | RunEvent    of handlers :(IEvent  handle) list
 
   type Async with
     /// Returns an asynchronous computation that waits for the given task to complete
@@ -93,8 +93,8 @@ module internal Library =
                       return! Async.FromContinuations (fun (_,err,_) -> err x)
             return! trapError context onError inbox }
       
-  let rec runActions shutdown actions errors message = 
-    async { match actions with
+  let rec runHandles shutdown handles errors message = 
+    async { match handles with
             | []        ->  return errors
             | act::rest ->  let! res =  (act message shutdown)
                                         |> Async.AwaitUnitTask 
@@ -102,20 +102,20 @@ module internal Library =
                             let errs =  match res with
                                         | Choice1Of2 _ ->     errors
                                         | Choice2Of2 x -> (x::errors)
-                            return! runActions shutdown rest errs message }
+                            return! runHandles shutdown rest errs message }
 
-  let batchActions onComplete onError (message:obj) (inbox:Agent<_>) = 
+  let batchHandles onComplete onError (message:obj) (inbox:Agent<_>) = 
     async { let! shutdown = Async.CancellationToken 
             let! handlers = inbox.Receive () 
             let! errors =
               match handlers with
-              | RunCommand  act   ->  message 
-                                      |> unbox<ICommand> 
-                                      |> runActions shutdown [act] []
-              | RunEvent    acts  ->  message 
-                                      |> unbox<IEvent> 
-                                      |> runActions shutdown acts []
-            // invoke appropriate callback (based on whether any actions failed)
+              | RunCommand  handle  ->  message 
+                                        |> unbox<ICommand> 
+                                        |> runHandles shutdown [handle] []
+              | RunEvent    handles ->  message 
+                                        |> unbox<IEvent> 
+                                        |> runHandles shutdown handles []
+            // invoke appropriate callback (based on whether any handles failed)
             if List.isEmpty errors 
               then onComplete ()
               else onError message (List.toSeq errors)

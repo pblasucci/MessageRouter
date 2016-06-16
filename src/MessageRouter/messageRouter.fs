@@ -33,7 +33,7 @@ type MessageRouter (onError,handlerTypes,resolver) as self =
 
   let worker message onComplete onError = 
     message
-    |> batchActions onComplete onError
+    |> batchHandles onComplete onError
     |> Agent.cancelWith shutdown.Token
     |> Agent.withMonitor supervisor (routeEx message)
     |> Agent.start

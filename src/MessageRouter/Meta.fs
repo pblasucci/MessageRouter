@@ -65,33 +65,33 @@ let getMethodForEvent messageType =
 let methodToFunction (resolver:IResolver) (act:MethodInfo) handlerType  =
   if resolver.CanResolve handlerType
     then  let handler = <@ resolver.Get handlerType @>
-          let action :Expr<'msg action> = 
+          let handle :Expr<'msg handle> = 
             <@ fun msg quit -> act.Invoke (%handler,[| msg; quit |]) |> unbox<Task> @>
-          action
+          handle
           |> LeafExpressionConverter.EvaluateQuotation
-          |> unbox<'msg action> 
+          |> unbox<'msg handle> 
           |> Some
     else  None
 
 let buildCommandHandler resolver handlerTypes messageType =
   let iface,handle  = getMethodForCommand messageType
-  let buildAction   = methodToFunction resolver handle
+  let buildHandle   = methodToFunction resolver handle
   let handlerTypes  = handlerTypes |> Seq.choose ((|Interface|_|) iface)
   //NOTE: the type returned from Seq.choose is 
   //      the type which will be pulled from the IResolver at execution!!!
   match List.ofSeq handlerTypes with
   | []  ->  CommandHandler  None
-  | [h] ->  CommandHandler (buildAction h)
+  | [h] ->  CommandHandler (buildHandle h)
   | _   ->  Error (MultipleCommandHandlers messageType)
 
 let buildEventHandlers resolver handlerTypes messageType =
   let iface,handle  = getMethodForEvent messageType
-  let buildAction   = methodToFunction resolver handle
+  let buildHandle   = methodToFunction resolver handle
   handlerTypes
   |> Seq.choose ((|Interface|_|) iface)
   //NOTE: the type returned from Seq.choose is 
   //      the type which will be pulled from the IResolver at execution!!!
-  |> Seq.choose buildAction 
+  |> Seq.choose buildHandle 
   |> EventHandlers
 
 let extractHandlers resolver handlerTypes messageType =
