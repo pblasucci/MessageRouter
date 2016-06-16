@@ -62,11 +62,11 @@ let getMethodForEvent messageType =
   | Method m  -> (target,target.GetMethod m.Name)
   | _         -> raise QuantumFluxError
 
-let methodToFunction (resolver:IResolver) (act:MethodInfo) handlerType  =
+let methodToFunction (resolver:IResolver) (meth:MethodInfo) handlerType  =
   if resolver.CanResolve handlerType
     then  let handler = <@ resolver.Get handlerType @>
           let handle :Expr<'msg handle> = 
-            <@ fun msg quit -> act.Invoke (%handler,[| msg; quit |]) |> unbox<Task> @>
+            <@ fun msg quit -> meth.Invoke (%handler,[|msg; quit|]) |> unbox<Task> @>
           handle
           |> LeafExpressionConverter.EvaluateQuotation
           |> unbox<'msg handle> 
